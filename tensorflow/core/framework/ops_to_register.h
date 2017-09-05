@@ -30,6 +30,7 @@
     constexpr const char* kNecessaryOpKernelClasses[] = {
 "BinaryOp< CPUDevice, functor::add<float>>",
 "BinaryOp< CPUDevice, functor::add<int32>>",
+"ReductionOp<CPUDevice, bool, Eigen::internal::AndReducer>",
 "AssertOp",
 "AvgPoolingOp<CPUDevice, float>",
 "BiasOp<CPUDevice, float>",
@@ -44,12 +45,15 @@
 "ExitOp",
 "UnaryOp< CPUDevice, functor::exp<float>>",
 "ExpandDimsOp",
+"FillOp<CPUDevice, ::tensorflow::int32>",
 "FillOp<CPUDevice, float>",
 "GatherOp<CPUDevice, float, int32>",
 "BinaryOp< CPUDevice, functor::greater<float>>",
 "BinaryOp< CPUDevice, functor::greater<int32>>",
+"BinaryOp< CPUDevice, functor::greater_equal<int32>>",
 "IdentityOp",
 "BinaryOp< CPUDevice, functor::less<int32>>",
+"BinaryOp<CPUDevice, functor::logical_and>",
 "LoopCondOp",
 "MaxPoolingOp<CPUDevice, float>",
 "BinaryOp< CPUDevice, functor::maximum<float>>",
@@ -57,9 +61,11 @@
 "BinaryOp< CPUDevice, functor::minimum<float>>",
 "BinaryOp< CPUDevice, functor::minimum<int32>>",
 "BinaryOp< CPUDevice, functor::mul<float>>",
+"BinaryOp< CPUDevice, functor::mul<int32>>",
 "NextIterationOp",
 "NoOp",
 "NonMaxSuppressionOp<CPUDevice>",
+"PackOp<CPUDevice, ::tensorflow::int32>",
 "PackOp<CPUDevice, float>",
 "PlaceholderOp",
 "RangeOp<::tensorflow::int32>",
@@ -78,12 +84,17 @@
 "BinaryOp< CPUDevice, functor::sub<float>>",
 "BinaryOp< CPUDevice, functor::sub<int32>>",
 "SwitchOp",
+"TensorArrayPackOrGatherOp<CPUDevice, ::tensorflow::int32, false >",
 "TensorArrayPackOrGatherOp<CPUDevice, float, false >",
+"TensorArrayReadOp<CPUDevice, ::tensorflow::int32>",
 "TensorArrayReadOp<CPUDevice, float>",
+"TensorArrayUnpackOrScatterOp<CPUDevice, ::tensorflow::int32, false >",
 "TensorArrayUnpackOrScatterOp<CPUDevice, float, false >",
 "TensorArraySizeOp",
 "TensorArrayOp",
+"TensorArrayWriteOp<CPUDevice, ::tensorflow::int32>",
 "TensorArrayWriteOp<CPUDevice, float>",
+"TileOp<CPUDevice>",
 "TopK<CPUDevice, float>",
 "TransposeCpuOp",
 "UnpackOp<CPUDevice, float>",
@@ -97,6 +108,7 @@
 constexpr inline bool ShouldRegisterOp(const char op[]) {
   return false
      || isequal(op, "Add")
+     || isequal(op, "All")
      || isequal(op, "Assert")
      || isequal(op, "AvgPool")
      || isequal(op, "BiasAdd")
@@ -113,8 +125,10 @@ constexpr inline bool ShouldRegisterOp(const char op[]) {
      || isequal(op, "Fill")
      || isequal(op, "Gather")
      || isequal(op, "Greater")
+     || isequal(op, "GreaterEqual")
      || isequal(op, "Identity")
      || isequal(op, "Less")
+     || isequal(op, "LogicalAnd")
      || isequal(op, "LoopCond")
      || isequal(op, "MaxPool")
      || isequal(op, "Maximum")
@@ -147,6 +161,7 @@ constexpr inline bool ShouldRegisterOp(const char op[]) {
      || isequal(op, "TensorArraySizeV3")
      || isequal(op, "TensorArrayV3")
      || isequal(op, "TensorArrayWriteV3")
+     || isequal(op, "Tile")
      || isequal(op, "TopKV2")
      || isequal(op, "Transpose")
      || isequal(op, "Unpack")
